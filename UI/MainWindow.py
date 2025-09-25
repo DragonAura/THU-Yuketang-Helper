@@ -13,6 +13,9 @@ from Scripts.Utils import *
 from Scripts.Classes import Lesson
 from dashscope import MultiModalConversation
 
+# 导入测试数据模块
+from UI.TestData import get_test_lessons, create_test_lesson
+
 class ProblemDetailWindow:
     """问题详情窗口"""
     def __init__(self, master, problem):
@@ -371,13 +374,15 @@ class ProblemListWindow:
             
             # 页码
             page_label = tk.Label(problem_frame, text=f"页码: {problem.get('page', 'N/A')}", 
-                                font=("STHeiti", 10), width=15, anchor=tk.W)
+                                font=("STHeiti", 10), width=15, anchor=tk.W, cursor="hand2")
             page_label.pack(side=tk.LEFT, padx=5, pady=5)
+            page_label.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
             
             # 问题内容
             content_label = tk.Label(problem_frame, text=f"{problem.get('body', '无问题内容')}", 
-                                   font=("STHeiti", 10), wraplength=600, justify=tk.LEFT)
+                                   font=("STHeiti", 10), wraplength=600, justify=tk.LEFT, cursor="hand2")
             content_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
+            content_label.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
     
     def on_problem_click(self, problem):
         """题目点击事件处理"""
@@ -396,6 +401,8 @@ class MainWindow:
         # 对象变量初始化
         self.table_index = []
         self.is_active = False
+        # 添加测试模式标志
+        self.test_mode = False
         
         # 课程相关变量
         self.on_lesson_list = []  # 已经签到完成加入监听列表的课程
@@ -450,6 +457,10 @@ class MainWindow:
         self.active_btn = tk.Button(button_frame, text="启动监听", bg="white", width=12)
         self.active_btn.pack(side=tk.LEFT, padx=5)
         
+        # 添加测试模式按钮
+        self.test_mode_btn = tk.Button(button_frame, text="测试模式", bg="white", width=12)
+        self.test_mode_btn.pack(side=tk.LEFT, padx=5)
+        
         self.login_btn = tk.Button(button_frame, text="登录", bg="white", width=12)
         self.login_btn.pack(side=tk.LEFT, padx=5)
         
@@ -501,6 +512,7 @@ class MainWindow:
     
     def bind_events(self):
         self.active_btn.config(command=self.toggle_monitor)
+        self.test_mode_btn.config(command=self.toggle_test_mode)
         self.login_btn.config(command=self.show_login)
         self.config_btn.config(command=self.show_config)
         # 绑定课程列表点击事件
@@ -518,6 +530,48 @@ class MainWindow:
                     # 创建并显示题目列表窗口
                     self.problem_window = ProblemListWindow(self.master, course_name, lesson.problems_ls)
                     break
+    
+    def toggle_test_mode(self):
+        """切换测试模式"""
+        if not self.test_mode:
+            # 进入测试模式
+            self.test_mode = True
+            self.test_mode_btn.config(text="退出测试", bg="yellow")
+            self.active_btn.config(state=tk.DISABLED)
+            self.login_btn.config(state=tk.DISABLED)
+            
+            # 加载测试课程
+            self.load_test_data()
+            
+            self.add_message("已进入测试模式，加载了测试课程'test'及其题目", 0)
+        else:
+            # 退出测试模式
+            self.test_mode = False
+            self.test_mode_btn.config(text="测试模式", bg="white")
+            self.active_btn.config(state=tk.NORMAL)
+            self.login_btn.config(state=tk.NORMAL)
+            
+            # 清除课程表格
+            for item in self.tree.get_children():
+                self.tree.delete(item)
+            
+            # 清空课程列表
+            self.lesson_list = []
+            self.on_lesson_list = []
+            
+            self.add_message("已退出测试模式", 0)
+    
+    def load_test_data(self):
+        """加载测试数据"""
+        # 获取测试课程列表
+        self.lesson_list = get_test_lessons()
+        
+        # 创建测试课程对象
+        test_lesson = create_test_lesson(self)
+        self.on_lesson_list.append(test_lesson)
+        
+        # 更新课程表格
+        self.update_course_table()
     
     def toggle_monitor(self):
         if not self.is_active:

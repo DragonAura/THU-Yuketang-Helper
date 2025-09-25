@@ -32,10 +32,10 @@ class Lesson:
         self.problems_ls = []
         self.unlocked_problem = []
         self.classmates_ls = []
-        self.add_message = main_ui.add_message_signal.emit
-        self.add_course = main_ui.add_course_signal.emit
-        self.del_course = main_ui.del_course_signal.emit
+        self.add_message = main_ui.add_message
+        # 在tkinter中，我们直接调用main_ui的方法来更新课程表格
         self.config = main_ui.config
+        self.main_ui = main_ui
         code, rtn = get_user_info(self.sessionid)
         self.user_uid = rtn["id"]
         self.user_uname = rtn["name"]
@@ -231,18 +231,11 @@ class Lesson:
     
     def start_lesson(self, callback):
         self.auth = self.checkin_class()
-        rtn = self.get_lesson_info()
-        teacher = rtn["teacher"]["name"]
-        title = rtn["title"]
-        timestamp = rtn["startTime"] // 1000
-        time_str = time.strftime("%Y-%m-%d %H:%M:%S",time.localtime(timestamp))
-        index = self.main_ui.tableWidget.rowCount()
-        self.add_course([self.lessonname,title,teacher,time_str],index)
+        # 在tkinter中，我们不需要手动添加课程到表格，因为main_ui的update_course_table方法会自动处理
         self.wsapp = websocket.WebSocketApp(url=wss_url,header=self.headers,on_open=self.on_open,on_message=self.on_message)
         self.wsapp.run_forever()
         meg = "%s监听结束" % self.lessonname
         self.add_message(meg,7)
-        self.del_course(index)
         # threading.Thread(target=say_something,args=(meg,)).start()
         return callback(self)
     
