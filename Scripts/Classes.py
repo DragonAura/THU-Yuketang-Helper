@@ -67,6 +67,7 @@ class Lesson:
                 print(slide["problem"])
                 local_path = os.path.join(os.path.abspath("output"), presentationid,"%s.jpg" % idx)
                 slide["problem"]["image"] = local_path
+                slide["problem"]["page"] = idx
                 return_problem.append(slide["problem"])
         return return_problem
 
