@@ -102,7 +102,65 @@ class ProblemDetailWindow:
             self.create_check_answer_area(answer_frame)
         elif self.problem.get('blanks'):  # 填空题
             self.create_fill_answer_area(answer_frame)
-    
+        
+        # 第五行：取消/确认按钮
+        button_frame = tk.Frame(main_frame)
+        button_frame.pack(fill=tk.X, pady=10)
+        
+        self.cancel_btn = tk.Button(button_frame, text="取消", font=("STHeiti", 10), 
+                                  width=15, command=self.on_cancel_click)
+        self.cancel_btn.pack(side=tk.RIGHT, padx=10)
+        
+        self.confirm_btn = tk.Button(button_frame, text="确认", font=("STHeiti", 10), 
+                                  width=15, command=self.on_confirm_click)
+        self.confirm_btn.pack(side=tk.RIGHT, padx=10)
+
+    def on_cancel_click(self):
+        """取消按钮点击事件"""
+        self.window.destroy()
+
+    def on_confirm_click(self):
+        """确认按钮点击事件"""
+        # 根据问题类型读取当前UI中的答案
+        if self.problem.get('problemType') == 1:  # 单选题
+            answer = [self.answer_var.get()]
+        elif self.problem.get('problemType') == 2 or self.problem.get('problemType') == 3:  # 多选题
+            answer = [key for key, var in self.answer_vars if var.get()]
+        elif self.problem.get('blanks'):  # 填空题
+            answer = [entry.get() for entry in self.answer_entries]
+        
+        # 将答案写回到原始的problem对象
+        self.problem['answers'] = answer
+        
+        messagebox.showinfo("提示", "答案已保存")
+        self.window.destroy()
+
+    def _update_answer_ui(self, ai_answer):
+        # 根据问题类型更新答案UI
+        if not ai_answer:
+            messagebox.showinfo("提示", "AI未返回有效答案")
+            return
+        
+        if self.problem.get('problemType') == 1:  # 单选题
+            if ai_answer:
+                self.answer_var.set(ai_answer[0])
+        elif self.problem.get('problemType') == 2 or self.problem.get('problemType') == 3:  # 多选题
+            # 先取消所有选择
+            for key, var in self.answer_vars:
+                var.set(False)
+            
+            # 根据AI答案选择对应的选项
+            for key, var in self.answer_vars:
+                if key in ai_answer:
+                    var.set(True)
+        elif self.problem.get('blanks'):  # 填空题
+            for i, entry in enumerate(self.answer_entries):
+                if i < len(ai_answer):
+                    entry.delete(0, tk.END)
+                    entry.insert(0, ai_answer[i])
+        
+        messagebox.showinfo("提示", "AI答题完成，请点击确认保存答案")
+
     def load_and_display_image(self):
         # 尝试加载并显示图片
         image_path = self.problem.get('image', '')
@@ -263,32 +321,6 @@ class ProblemDetailWindow:
         finally:
             # 在主线程中恢复按钮状态
             self.window.after(0, lambda: self.ai_answer_btn.config(state=tk.NORMAL, text="AI 答题"))
-    
-    def _update_answer_ui(self, ai_answer):
-        # 根据问题类型更新答案UI
-        if not ai_answer:
-            messagebox.showinfo("提示", "AI未返回有效答案")
-            return
-        
-        if self.problem.get('problemType') == 1:  # 单选题
-            if ai_answer:
-                self.answer_var.set(ai_answer[0])
-        elif self.problem.get('problemType') == 2 or self.problem.get('problemType') == 3:  # 多选题
-            # 先取消所有选择
-            for key, var in self.answer_vars:
-                var.set(False)
-            
-            # 根据AI答案选择对应的选项
-            for key, var in self.answer_vars:
-                if key in ai_answer:
-                    var.set(True)
-        elif self.problem.get('blanks'):  # 填空题
-            for i, entry in enumerate(self.answer_entries):
-                if i < len(ai_answer):
-                    entry.delete(0, tk.END)
-                    entry.insert(0, ai_answer[i])
-        
-        messagebox.showinfo("提示", "AI答题完成")
 
 class ProblemListWindow:
     """显示课程题目列表的窗口"""
