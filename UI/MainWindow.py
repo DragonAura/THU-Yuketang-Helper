@@ -33,7 +33,7 @@ class MainWindow_Ui(QtCore.QObject):
         MainWindow.resize(800, 700)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("background-color: rgb(255, 255, 255);")
-        MainWindow.setWindowIcon(QtGui.QIcon(resource_path("UI\\Image\\favicon.ico")))
+        MainWindow.setWindowIcon(QtGui.QIcon(resource_path("UI/Image/favicon.ico")))
         self.Window = QtWidgets.QWidget(MainWindow)
         self.Window.setStyleSheet("background-color: rgb(255, 255, 255);")
         self.Window.setObjectName("Window")
@@ -57,13 +57,13 @@ class MainWindow_Ui(QtCore.QObject):
         self.label.setStyleSheet("border-radius:10px;\n"
 "")
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(resource_path("UI\\Image\\TinsghuaYKT.jpg")))
+        self.label.setPixmap(QtGui.QPixmap(resource_path("UI/Image/TinsghuaYKT.jpg")))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.horizontalLayout_3.addWidget(self.label)
         self.label_2 = QtWidgets.QLabel(self.Menu)
         self.label_2.setStyleSheet("color: rgb(255, 255, 255);\n"
-"font: 16pt \"黑体\";")
+"font: 16pt \"STHeiti\";")
         self.label_2.setObjectName("label_2")
         self.horizontalLayout_3.addWidget(self.label_2)
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -96,7 +96,7 @@ class MainWindow_Ui(QtCore.QObject):
         self.verticalLayout.addWidget(self.Menu)
         self.Table = QtWidgets.QGroupBox(self.Window)
         self.Table.setStyleSheet("color: rgb(209, 209, 209);\n"
-"font: 10pt \"微软雅黑\";\n"
+"font: 10pt \"STHeiti\";\n"
 "color: rgb(0, 0, 0);")
         self.Table.setObjectName("Table")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.Table)
@@ -107,7 +107,7 @@ class MainWindow_Ui(QtCore.QObject):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.tableWidget.sizePolicy().hasHeightForWidth())
         self.tableWidget.setSizePolicy(sizePolicy)
-        self.tableWidget.setStyleSheet("font: 9pt \"微软雅黑\";")
+        self.tableWidget.setStyleSheet("font: 9pt \"STHeiti\";")
         self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
         self.tableWidget.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget.setObjectName("tableWidget")
@@ -129,7 +129,7 @@ class MainWindow_Ui(QtCore.QObject):
         self.verticalLayout.addWidget(self.Table)
         self.Output = QtWidgets.QGroupBox(self.Window)
         self.Output.setStyleSheet("color: rgb(209, 209, 209);\n"
-"font: 10pt \"微软雅黑\";\n"
+"font: 10pt \"STHeiti\";\n"
 "color: rgb(0, 0, 0);")
         self.Output.setObjectName("Output")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.Output)
@@ -137,7 +137,7 @@ class MainWindow_Ui(QtCore.QObject):
         self.output_textarea = QtWidgets.QTextBrowser(self.Output)
         self.output_textarea.setStyleSheet("background-color: rgb(100, 100, 100);\n"
 "color: rgb(255, 255, 255);\n"
-"font: 9pt \"微软雅黑\";")
+"font: 9pt \"STHeiti\";")
         self.output_textarea.setObjectName("output_textarea")
         self.verticalLayout_2.addWidget(self.output_textarea)
         self.verticalLayout.addWidget(self.Output)

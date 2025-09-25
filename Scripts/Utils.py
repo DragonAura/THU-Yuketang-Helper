@@ -92,13 +92,14 @@ def get_initial_data():
 
 def get_config_path():
     # 获取配置文件路径
-    config_route = get_config_dir() + "\\config.json"
+    config_route = get_config_dir() + "/config.json"
     return config_route
 
 def get_config_dir():
     # 获取配置文件所在文件夹
-    appdata_route = os.environ['APPDATA']
-    dir_route = appdata_route + "\\RainClassroomAssistant"
+    home = os.environ["HOME"]
+    appdata_route = f"{home}/Library"
+    dir_route = appdata_route + "/RainClassroomAssistant"
     return dir_route
 
 def get_user_info(sessionid):

@@ -21,7 +21,7 @@ class Login_Ui(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(350, 500)
         Dialog.setStyleSheet("background-color: rgb(255, 255, 255);")
-        Dialog.setWindowIcon(QtGui.QIcon(resource_path("UI\\Image\\favicon.ico")))
+        Dialog.setWindowIcon(QtGui.QIcon(resource_path("UIImagefavicon.ico")))
         self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
         self.verticalLayout.setObjectName("verticalLayout")
         self.widget = QtWidgets.QWidget(Dialog)
@@ -33,12 +33,12 @@ class Login_Ui(object):
         self.label = QtWidgets.QLabel(self.widget)
         self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label.setStyleSheet("color: rgb(0, 0, 0);\n"
-"font: 16pt \"微软雅黑\";")
+"font: 16pt \"STHeiti\";")
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
         self.verticalLayout_2.addWidget(self.label)
         self.label_2 = QtWidgets.QLabel(self.widget)
-        self.label_2.setStyleSheet("font: 8pt \"微软雅黑\";\n"
+        self.label_2.setStyleSheet("font: 8pt \"STHeiti\";\n"
 "color: rgb(255, 0, 0);")
         self.label_2.setTextFormat(QtCore.Qt.AutoText)
         self.label_2.setAlignment(QtCore.Qt.AlignCenter)
