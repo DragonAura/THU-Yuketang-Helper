@@ -1,16 +1,16 @@
 import sys
-from PyQt5 import QtWidgets
-from UI.MainWindow import MainWindow_Ui
+import tkinter as tk
+from tkinter import messagebox
+from UI.MainWindow import MainWindow
 
 if __name__ == "__main__":
-    # 初始化
-    app = QtWidgets.QApplication(sys.argv)
-    main = QtWidgets.QMainWindow()
-    ui = MainWindow_Ui()
-    ui.setupUi(main)
-    main.show()
-    # 启动监听
-    ui.active()
-    # 主窗体循环
-    app.exec_()
+    # 初始化tkinter应用
+    root = tk.Tk()
+    root.title("清华大学雨课堂助手")
+    
+    # 创建并显示主窗口
+    app = MainWindow(root)
+    
+    # 启动主事件循环
+    root.mainloop()
 

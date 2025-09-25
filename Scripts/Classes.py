@@ -219,7 +219,7 @@ class Lesson:
                 while not have_answer and retry_count < 5:
                     try:
                         response = MultiModalConversation.call(
-                            api_key=os.getenv("API_KEY_QWEN"),
+                            api_key="sk-b6f093b32dd5401eb2988d963c85df18",
                             model='qwen-vl-max-latest',
                             messages=messages,
                             response_format={"type": "json_object"},
