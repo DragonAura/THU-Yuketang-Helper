@@ -1,5 +1,4 @@
 import threading
-import pyttsx3
 import json
 import urllib3
 import requests
@@ -9,11 +8,6 @@ import sys
 
 lock = threading.Lock()
 
-def say_something(text):
-    # 带线程锁的语音函数
-    lock.acquire()
-    pyttsx3.speak(text)
-    lock.release()
     
 def dict_result(text):
     # json string 转 dict object
@@ -64,19 +58,6 @@ def get_initial_data():
         "auto_danmu":True,
         "danmu_config":{
             "danmu_limit":5
-        },
-        "audio_on":True,
-        "audio_config":{
-            "audio_type":{
-                "send_danmu":False,
-                "others_danmu":False,
-                "receive_problem":True,
-                "answer_result":True,
-                "im_called":True,
-                "others_called":True,
-                "course_info":True,
-                "network_info":True
-            }
         },
         "auto_answer":True,
         "answer_config":{

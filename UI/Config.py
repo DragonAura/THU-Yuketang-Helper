@@ -69,8 +69,8 @@ class ConfigDialog:
         
         # 创建各个配置区域
         self.create_danmu_config()
-        self.create_audio_config()
         self.create_auto_answer_config()
+        self.create_ai_config()
         self.create_button_area()
     
     def on_frame_configure(self, event=None):
@@ -107,77 +107,7 @@ class ConfigDialog:
                                        textvariable=self.danmu_spinbox_var, font=("STHeiti", 9))
         self.danmu_spinbox.pack(anchor=tk.W, pady=5)
     
-    def create_audio_config(self):
-        # 音频设置区域
-        audio_frame = tk.LabelFrame(self.content_frame, text="音频提醒设置", font=("STHeiti", 10), bg="white")
-        audio_frame.pack(fill=tk.X, padx=20, pady=10, ipady=10)
-        
-        # 启用音频复选框
-        self.audio_on_var = tk.BooleanVar()
-        self.audio_on = tk.Checkbutton(audio_frame, text="启用音频提醒", variable=self.audio_on_var, 
-                                      font=("STHeiti", 9), bg="white", command=self.toggle_audio_settings)
-        self.audio_on.pack(anchor=tk.W, pady=5)
-        
-        # 音频设置详细选项
-        self.audio_settings_frame = tk.Frame(audio_frame, bg="white")
-        self.audio_settings_frame.pack(fill=tk.X, padx=20)
-        
-        # 音频类型设置
-        audio_types_label = tk.Label(self.audio_settings_frame, text="选择需要提醒的事件:", 
-                                    font=("STHeiti", 9), bg="white")
-        audio_types_label.pack(anchor=tk.W, pady=5)
-        
-        # 创建音频类型选项
-        audio_types_frame = tk.Frame(self.audio_settings_frame, bg="white")
-        audio_types_frame.pack(fill=tk.X)
-        
-        # 左侧选项
-        left_frame = tk.Frame(audio_types_frame, bg="white")
-        left_frame.pack(side=tk.LEFT, fill=tk.Y, padx=(0, 20))
-        
-        self.self_danmu_var = tk.BooleanVar()
-        self.self_danmu = tk.Checkbutton(left_frame, text="自己发送弹幕", variable=self.self_danmu_var, 
-                                        font=("STHeiti", 9), bg="white")
-        self.self_danmu.pack(anchor=tk.W, pady=3)
-        
-        self.others_danmu_var = tk.BooleanVar()
-        self.others_danmu = tk.Checkbutton(left_frame, text="他人发送弹幕", variable=self.others_danmu_var, 
-                                          font=("STHeiti", 9), bg="white")
-        self.others_danmu.pack(anchor=tk.W, pady=3)
-        
-        self.receive_problem_var = tk.BooleanVar()
-        self.receive_problem = tk.Checkbutton(left_frame, text="收到题目", variable=self.receive_problem_var, 
-                                            font=("STHeiti", 9), bg="white")
-        self.receive_problem.pack(anchor=tk.W, pady=3)
-        
-        # 右侧选项
-        right_frame = tk.Frame(audio_types_frame, bg="white")
-        right_frame.pack(side=tk.LEFT, fill=tk.Y)
-        
-        self.answer_result_var = tk.BooleanVar()
-        self.answer_result = tk.Checkbutton(right_frame, text="答题结果", variable=self.answer_result_var, 
-                                          font=("STHeiti", 9), bg="white")
-        self.answer_result.pack(anchor=tk.W, pady=3)
-        
-        self.im_called_var = tk.BooleanVar()
-        self.im_called = tk.Checkbutton(right_frame, text="自己被点名", variable=self.im_called_var, 
-                                       font=("STHeiti", 9), bg="white")
-        self.im_called.pack(anchor=tk.W, pady=3)
-        
-        self.others_called_var = tk.BooleanVar()
-        self.others_called = tk.Checkbutton(right_frame, text="他人被点名", variable=self.others_called_var, 
-                                           font=("STHeiti", 9), bg="white")
-        self.others_called.pack(anchor=tk.W, pady=3)
-        
-        self.course_info_var = tk.BooleanVar()
-        self.course_info = tk.Checkbutton(right_frame, text="课程信息", variable=self.course_info_var, 
-                                         font=("STHeiti", 9), bg="white")
-        self.course_info.pack(anchor=tk.W, pady=3)
-        
-        self.network_info_var = tk.BooleanVar()
-        self.network_info = tk.Checkbutton(right_frame, text="网络信息", variable=self.network_info_var, 
-                                          font=("STHeiti", 9), bg="white")
-        self.network_info.pack(anchor=tk.W, pady=3)
+
     
     def create_auto_answer_config(self):
         # 自动答题设置区域
@@ -218,6 +148,35 @@ class ConfigDialog:
                                             textvariable=self.custom_time_var, font=("STHeiti", 9))
         self.custom_time_spinbox.pack(anchor=tk.W, pady=5)
     
+    def create_ai_config(self):
+        # AI设置区域
+        ai_frame = tk.LabelFrame(self.content_frame, text="AI设置", font=("STHeiti", 10), bg="white")
+        ai_frame.pack(fill=tk.X, padx=20, pady=10, ipady=10)
+        
+        # AI Key标签
+        ai_key_label = tk.Label(ai_frame, text="AI API Key:", 
+                              font=("STHeiti", 9), bg="white")
+        ai_key_label.pack(anchor=tk.W, pady=5)
+        
+        # AI Key输入框
+        self.ai_key_var = tk.StringVar()
+        self.ai_key_entry = tk.Entry(ai_frame, textvariable=self.ai_key_var, width=50, 
+                                    font=("STHeiti", 9), show="*")
+        self.ai_key_entry.pack(anchor=tk.W, pady=5)
+        
+        # 显示/隐藏密码按钮
+        self.show_key_var = tk.BooleanVar()
+        self.show_key_check = tk.Checkbutton(ai_frame, text="显示Key", variable=self.show_key_var, 
+                                           font=("STHeiti", 9), bg="white", command=self.toggle_key_visibility)
+        self.show_key_check.pack(anchor=tk.W, pady=5)
+        
+    def toggle_key_visibility(self):
+        # 切换AI Key的显示/隐藏
+        if self.show_key_var.get():
+            self.ai_key_entry.config(show="")
+        else:
+            self.ai_key_entry.config(show="*")
+            
     def create_button_area(self):
         # 按钮区域
         button_frame = tk.Frame(self.content_frame, bg="white")
@@ -234,17 +193,7 @@ class ConfigDialog:
         self.danmu_on_var.set(self.config.get("auto_danmu", True))
         self.danmu_spinbox_var.set(self.config.get("danmu_config", {}).get("danmu_limit", 5))
         
-        # 音频设置
-        self.audio_on_var.set(self.config.get("audio_on", True))
-        audio_type = self.config.get("audio_config", {}).get("audio_type", {})
-        self.self_danmu_var.set(audio_type.get("send_danmu", False))
-        self.others_danmu_var.set(audio_type.get("others_danmu", False))
-        self.receive_problem_var.set(audio_type.get("receive_problem", True))
-        self.answer_result_var.set(audio_type.get("answer_result", True))
-        self.im_called_var.set(audio_type.get("im_called", True))
-        self.others_called_var.set(audio_type.get("others_called", True))
-        self.course_info_var.set(audio_type.get("course_info", True))
-        self.network_info_var.set(audio_type.get("network_info", True))
+
         
         # 自动答题设置
         self.auto_answer_var.set(self.config.get("auto_answer", True))
@@ -252,9 +201,11 @@ class ConfigDialog:
         self.delay_type_var.set(answer_delay.get("type", 1))
         self.custom_time_var.set(answer_delay.get("custom", {}).get("time", 0))
         
+        # AI设置
+        self.ai_key_var.set(self.config.get("ai_config", {}).get("api_key", ""))
+        
         # 初始化UI状态
         self.toggle_danmu_settings()
-        self.toggle_audio_settings()
         self.toggle_answer_settings()
         self.toggle_delay_custom()
     
@@ -263,21 +214,24 @@ class ConfigDialog:
         state = tk.NORMAL if self.danmu_on_var.get() else tk.DISABLED
         
         for child in self.danmu_settings_frame.winfo_children():
-            child.config(state=state)
+            # 只对支持state选项的控件设置状态
+            if hasattr(child, 'config') and 'state' in child.config():
+                child.config(state=state)
     
-    def toggle_audio_settings(self):
-        # 切换音频设置区域的可用状态
-        state = tk.NORMAL if self.audio_on_var.get() else tk.DISABLED
-        
-        for child in self.audio_settings_frame.winfo_children():
-            child.config(state=state)
+
     
     def toggle_answer_settings(self):
         # 切换自动答题设置区域的可用状态
         state = tk.NORMAL if self.auto_answer_var.get() else tk.DISABLED
         
-        for child in self.answer_settings_frame.winfo_children():
-            child.config(state=state)
+        # 直接控制单选按钮的状态，而不是尝试设置整个Frame的状态
+        # 查找delay_type_frame中的单选按钮并设置其状态
+        for frame in self.answer_settings_frame.winfo_children():
+            if isinstance(frame, tk.Frame):
+                for widget in frame.winfo_children():
+                    # 只对支持state选项的控件设置状态
+                    if hasattr(widget, 'config') and 'state' in widget.config():
+                        widget.config(state=state)
         
         # 特别处理延迟设置区域
         self.toggle_delay_custom()
@@ -288,7 +242,9 @@ class ConfigDialog:
         state = tk.NORMAL if (self.auto_answer_var.get() and self.delay_type_var.get() == 2) else tk.DISABLED
         
         for child in self.delay_custom_frame.winfo_children():
-            child.config(state=state)
+            # 只对支持state选项的控件设置状态
+            if hasattr(child, 'config') and 'state' in child.config():
+                child.config(state=state)
     
     def save_config(self):
         # 保存配置
@@ -298,19 +254,7 @@ class ConfigDialog:
             "danmu_limit": self.danmu_spinbox_var.get()
         }
         
-        self.config["audio_on"] = self.audio_on_var.get()
-        self.config["audio_config"] = {
-            "audio_type": {
-                "send_danmu": self.self_danmu_var.get(),
-                "others_danmu": self.others_danmu_var.get(),
-                "receive_problem": self.receive_problem_var.get(),
-                "answer_result": self.answer_result_var.get(),
-                "im_called": self.im_called_var.get(),
-                "others_called": self.others_called_var.get(),
-                "course_info": self.course_info_var.get(),
-                "network_info": self.network_info_var.get()
-            }
-        }
+
         
         self.config["auto_answer"] = self.auto_answer_var.get()
         self.config["answer_config"] = {
@@ -320,6 +264,11 @@ class ConfigDialog:
                     "time": self.custom_time_var.get()
                 }
             }
+        }
+        
+        # AI设置
+        self.config["ai_config"] = {
+            "api_key": self.ai_key_var.get()
         }
         
         # 保存到文件

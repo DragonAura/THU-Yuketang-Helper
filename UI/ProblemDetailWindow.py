@@ -21,10 +21,21 @@ class ProblemDetailWindow:
         self.load_ai_key()
     
     def load_ai_key(self):
-        # 从环境变量或配置中加载AI key
-        ai_key = os.getenv("API_KEY_QWEN", "")
-        self.ai_key_entry.delete(0, tk.END)
-        self.ai_key_entry.insert(0, ai_key)
+        # 从配置中加载AI key
+        try:
+            from Scripts.Utils import get_config_path
+            config_path = get_config_path()
+            if os.path.exists(config_path):
+                with open(config_path, 'r') as f:
+                    config = json.load(f)
+                    ai_key = config.get("ai_config", {}).get("api_key", "")
+                    self.ai_key_entry.delete(0, tk.END)
+                    self.ai_key_entry.insert(0, ai_key)
+        except Exception as e:
+            # 如果加载失败，使用环境变量作为备选
+            ai_key = os.getenv("API_KEY_QWEN", "")
+            self.ai_key_entry.delete(0, tk.END)
+            self.ai_key_entry.insert(0, ai_key)
     
     def create_ui(self):
         # 创建主框架
@@ -44,29 +55,33 @@ class ProblemDetailWindow:
         x_scrollbar.pack(side=tk.BOTTOM, fill=tk.X)
         
         # 创建Canvas
-        canvas = tk.Canvas(scroll_frame, yscrollcommand=y_scrollbar.set, xscrollcommand=x_scrollbar.set)
-        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.canvas = tk.Canvas(scroll_frame, yscrollcommand=y_scrollbar.set, xscrollcommand=x_scrollbar.set)
+        self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         
         # 配置滚动条
-        y_scrollbar.config(command=canvas.yview)
-        x_scrollbar.config(command=canvas.xview)
+        y_scrollbar.config(command=self.canvas.yview)
+        x_scrollbar.config(command=self.canvas.xview)
         
         # 创建内部内容框架
-        content_frame = tk.Frame(canvas)
-        canvas_window = canvas.create_window((0, 0), window=content_frame, anchor="nw")
+        content_frame = tk.Frame(self.canvas)
+        canvas_window = self.canvas.create_window((0, 0), window=content_frame, anchor="nw")
         
         # 绑定事件，确保Canvas大小适应内容
         def on_frame_configure(event):
             # 更新Canvas的滚动区域
-            canvas.configure(scrollregion=canvas.bbox("all"))
+            self.canvas.configure(scrollregion=self.canvas.bbox("all"))
         
         content_frame.bind("<Configure>", on_frame_configure)
         
         # 绑定鼠标滚轮事件实现垂直滚动
         def on_mousewheel(event):
-            canvas.yview_scroll(int(-1*(event.delta/120)), "units")
-        
-        canvas.bind_all("<MouseWheel>", on_mousewheel)
+            try:
+                self.canvas.yview_scroll(int(-1*(event.delta/120)), "units")
+            except tk.TclError:
+                # 忽略画布已被销毁的错误
+                pass
+
+        self.canvas.bind_all("<MouseWheel>", on_mousewheel)
         
         # 第一行：问题内容
         section_frame = tk.Frame(content_frame)
@@ -108,7 +123,7 @@ class ProblemDetailWindow:
         key_label = tk.Label(input_frame, text="AI Key:", font=("STHeiti", 10))
         key_label.pack(side=tk.LEFT, padx=5)
         
-        self.ai_key_entry = tk.Entry(input_frame, font=("STHeiti", 10), width=40)
+        self.ai_key_entry = tk.Entry(input_frame, font=("STHeiti", 10), width=40, show="*")
         self.ai_key_entry.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
         
         self.ai_answer_btn = tk.Button(input_frame, text="AI 答题", font=("STHeiti", 10), 
@@ -147,6 +162,11 @@ class ProblemDetailWindow:
 
     def on_cancel_click(self):
         """取消按钮点击事件"""
+        # 解绑鼠标滚轮事件
+        try:
+            self.canvas.unbind_all("<MouseWheel>")
+        except:
+            pass
         self.window.destroy()
 
     def on_confirm_click(self):
@@ -164,6 +184,11 @@ class ProblemDetailWindow:
         
         messagebox.showinfo("提示", "答案已保存")
         
+        # 解绑鼠标滚轮事件
+        try:
+            self.canvas.unbind_all("<MouseWheel>")
+        except:
+            pass
         self.window.destroy()
 
     def _update_answer_ui(self, ai_answer):

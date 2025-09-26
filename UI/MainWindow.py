@@ -317,7 +317,7 @@ class MainWindow:
     
     def show_config(self):
         # 显示设置对话框
-        config_dialog = ConfigDialog(self.master)
+        config_dialog = ConfigDialog(self.master, self)
         self.master.wait_window(config_dialog.top)
         # 重新加载配置
         self.load_config()
