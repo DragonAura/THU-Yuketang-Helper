@@ -78,10 +78,29 @@ def get_config_path():
 
 def get_config_dir():
     # 获取配置文件所在文件夹
-    home = os.environ["HOME"]
-    appdata_route = f"{home}/Library"
-    dir_route = appdata_route + "/RainClassroomAssistant"
-    return dir_route
+    import platform
+    system = platform.system()
+    
+    if system == "Windows":
+        # Windows系统使用APPDATA环境变量
+        if "APPDATA" in os.environ:
+            home = os.environ["APPDATA"]
+        else:
+            # 备用方案
+            home = os.environ["USERPROFILE"]
+        appdata_route = f"{home}\RainClassroomAssistant"
+    else:
+        # macOS和Linux系统使用HOME环境变量
+        home = os.environ["HOME"]
+        appdata_route = f"{home}/Library"
+        dir_route = appdata_route + "/RainClassroomAssistant"
+        return dir_route
+    
+    # 确保目录存在
+    if not os.path.exists(appdata_route):
+        os.makedirs(appdata_route)
+    
+    return appdata_route
 
 def get_user_info(sessionid):
     # 获取用户信息

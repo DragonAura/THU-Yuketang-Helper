@@ -310,7 +310,7 @@ class MainWindow:
     
     def show_login(self):
         # 显示登录对话框
-        login_dialog = LoginDialog(self.master)
+        login_dialog = LoginDialog(self.master, self)
         self.master.wait_window(login_dialog.top)
         # 重新加载配置
         self.load_config()
