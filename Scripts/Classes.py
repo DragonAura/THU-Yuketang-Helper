@@ -64,7 +64,7 @@ class Lesson:
 
             if "problem" in slide.keys():
                 # replace with abs path
-                print(slide["problem"])
+                # print(slide["problem"])
                 local_path = os.path.join(os.path.abspath("output"), presentationid,"%s.jpg" % idx)
                 slide["problem"]["image"] = local_path
                 slide["problem"]["page"] = idx
@@ -208,7 +208,7 @@ class Lesson:
                 # answers = []
                 answers = promblem.get("answers",[])
                 threading.Thread(target=self.answer_questions,args=(promblem["problemId"],promblem["problemType"],answers,limit)).start()
-                print("Try answer")
+                # print("Try answer")
                 break
         else:
             if limit == -1:

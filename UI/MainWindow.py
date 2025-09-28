@@ -149,6 +149,7 @@ class MainWindow:
     
     def on_course_click(self, event):
         """课程列表点击事件处理"""
+        # print("clicked")
         item = self.tree.selection()
         if item:
             # 获取选中的课程
@@ -244,6 +245,7 @@ class MainWindow:
             # 获取课程列表
             try:
                 self.lesson_list = get_on_lesson(sessionid)
+                # print(self.lesson_list)
             except requests.exceptions.ConnectionError:
                 meg = "网络异常，监听中断"
                 self.add_message(meg, 8)
@@ -280,14 +282,19 @@ class MainWindow:
             # 检查新课程
             for lesson in self.lesson_list:
                 # 如果课程不在已监听列表中，并且课程已经开始
-                if not any(lesson_obj.lessonid == lesson["lessonId"] for lesson_obj in self.on_lesson_list) and lesson["status"] == 1:
+                if not any(lesson_obj.lessonid == lesson["lessonId"] for lesson_obj in self.on_lesson_list) and lesson.get("status", 1) == 1:
                     # 创建课程对象
                     lesson_obj = Lesson(lesson["lessonId"], lesson["courseName"], lesson["classroomId"], self)
                     # 将课程添加到监听列表
                     self.on_lesson_list.append(lesson_obj)
                     # 开始监听课程
-                    lesson_obj.start_lesson(del_onclass)
+                    lesson_thread = threading.Thread(target=lesson_obj.start_lesson,args=(del_onclass,),daemon=True)
+                    lesson_thread.start()
+                    self.add_message(f"检测到课程{lesson_obj.lessonname}正在上课，已加入监听列表", 7)
+
+                    # lesson_obj.start_lesson(del_onclass)
                     # 更新课程表格
+                    # print("成功 start")
                     self.update_course_table()
                     break
             # 每5秒检查一次
@@ -302,8 +309,8 @@ class MainWindow:
             
             # 添加课程
             for lesson in self.lesson_list:
-                status = "进行中" if lesson["status"] == 1 else "未开始"
-                self.tree.insert("", "end", values=(lesson["courseName"], status, lesson["progress"]))
+                status = "进行中" if lesson.get("status", 1) == 1 else "未开始"
+                self.tree.insert("", "end", values=(lesson["courseName"], status, lesson.get("progress", "")))
         
         # 在主线程中执行
         self.master.after(0, update)
