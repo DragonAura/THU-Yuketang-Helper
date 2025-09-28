@@ -58,7 +58,7 @@ class Lesson:
                 if r.status_code == 200:
                     with open(os.path.join("output", presentationid,"%s.jpg" % idx),"wb") as f:
                         f.write(r.content)
-                        self.add_message("下载图片成功，路径为：%s" % os.path.join("output", presentationid,"%s.jpg" % idx),3)
+                        self.add_message("下载图片成功，路径为：%s" % os.path.join("output", presentationid,"%s.jpg" % idx),0)
                 else:
                     self.add_message("下载图片失败，状态码：%s，路径为：%s" % (r.status_code,os.path.join("output", presentationid,"%s.jpg" % idx)),4)
 
@@ -77,17 +77,17 @@ class Lesson:
             wait_time = calculate_waittime(limit, self.config["answer_config"]["answer_delay"]["type"], self.config["answer_config"]["answer_delay"]["custom"]["time"])
             if wait_time != 0:
                 meg = "%s检测到问题，将在%s秒后自动回答，答案为%s" % (self.lessonname,wait_time,answer)
-                self.add_message(meg,3)
+                self.add_message(meg,0)
                 time.sleep(wait_time)
             else:
                 meg = "%s检测到问题，剩余时间小于15秒，将立即自动回答，答案为%s" % (self.lessonname,answer)
-                self.add_message(meg,3)
+                self.add_message(meg,0)
             data = {"problemId":problemid,"problemType":problemtype,"dt":int(time.time()),"result":answer}
             r = requests.post(url="https://pro.yuketang.cn/api/v3/lesson/problem/answer",headers=self.headers,data=json.dumps(data),proxies={"http": None,"https":None})
             return_dict = dict_result(r.text)
             if return_dict["code"] == 0:
                 meg = "%s自动回答成功" % self.lessonname
-                self.add_message(meg,4)
+                self.add_message(meg,0)
                 return True
             else:
                 meg = "%s自动回答失败，原因：%s" % (self.lessonname,return_dict["msg"].replace("_"," "))
@@ -133,7 +133,7 @@ class Lesson:
             self.start_answer(data["problem"]["sid"],data["problem"]["limit"])
         elif op == "lessonfinished":
             meg = "%s下课了" % self.lessonname
-            self.add_message(meg,7)
+            self.add_message(meg,0)
             wsapp.close()
         elif op == "presentationupdated":
             self.problems_ls.extend(self.get_problems(data["presentation"]))
@@ -193,7 +193,7 @@ class Lesson:
                 else:
                     if time_left == -1:
                         meg = "%s检测到问题，该题不限时，请尽快前往荷塘雨课堂回答" % (self.lessonname)
-                        self.add_message(meg,3)
+                        self.add_message(meg,0)
                     else:
                         meg = "%s检测到问题，请在%s秒内前往荷塘雨课堂回答" % (self.lessonname,time_left)
 
@@ -215,7 +215,7 @@ class Lesson:
                 meg = "%s的问题没有找到答案，该题不限时，请尽快前往荷塘雨课堂回答" % (self.lessonname)
             else:
                 meg = "%s的问题没有找到答案，请在%s秒内前往荷塘雨课堂回答" % (self.lessonname,limit)
-            self.add_message(meg,4)
+            self.add_message(meg,0)
 
     
     def _current_problem(self, wsapp, promblemid):
@@ -229,7 +229,7 @@ class Lesson:
         self.wsapp = websocket.WebSocketApp(url=wss_url,header=self.headers,on_open=self.on_open,on_message=self.on_message)
         self.wsapp.run_forever()
         meg = "%s监听结束" % self.lessonname
-        self.add_message(meg,7)
+        self.add_message(meg,0)
         return callback(self)
     
     def send_danmu(self,content):
@@ -250,7 +250,7 @@ class Lesson:
             meg = "%s弹幕发送成功！内容：%s" % (self.lessonname,content)
         else:
             meg = "%s弹幕发送失败！内容：%s" % (self.lessonname,content)
-        self.add_message(meg,1)
+        self.add_message(meg,0)
     
     def get_lesson_info(self):
         url = "https://pro.yuketang.cn/api/v3/lesson/basic-info"
