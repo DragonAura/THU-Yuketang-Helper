@@ -88,20 +88,35 @@ class ProblemListWindow:
             # 创建问题项
             problem_frame = tk.Frame(inner_frame, bd=1, relief=tk.RAISED)
             problem_frame.pack(fill=tk.X, pady=5, padx=5)
-            problem_frame.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
-            problem_frame.config(cursor="hand2")
             
-            # 页码
-            page_label = tk.Label(problem_frame, text=f"页码: {problem.get('page', 'N/A')}", 
-                                font=("STHeiti", 10), width=15, anchor=tk.W, cursor="hand2")
-            page_label.pack(side=tk.LEFT, padx=5, pady=5)
-            page_label.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
+            # 检查问题是否有result键且非空
+            has_result = 'result' in problem and problem['result']
             
-            # 问题内容
-            content_label = tk.Label(problem_frame, text=f"{problem.get('body', '无问题内容')}", 
-                                   font=("STHeiti", 10), wraplength=600, justify=tk.LEFT, cursor="hand2")
-            content_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
-            content_label.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
+            if has_result:
+                # 有结果，锁住题目，设置为灰色背景
+                problem_frame.config(bg="#E0E0E0", cursor="arrow")
+                # 页码
+                page_label = tk.Label(problem_frame, text=f"页码: {problem.get('page', 'N/A')} (已解答)", 
+                                    font=("STHeiti", 10), width=20, anchor=tk.W, cursor="arrow", bg="#E0E0E0")
+                page_label.pack(side=tk.LEFT, padx=5, pady=5)
+                # 问题内容
+                content_label = tk.Label(problem_frame, text=f"{problem.get('body', '无问题内容')}", 
+                                       font=("STHeiti", 10), wraplength=600, justify=tk.LEFT, cursor="arrow", bg="#E0E0E0")
+                content_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
+            else:
+                # 没有结果，可点击
+                problem_frame.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
+                problem_frame.config(cursor="hand2")
+                # 页码
+                page_label = tk.Label(problem_frame, text=f"页码: {problem.get('page', 'N/A')}", 
+                                    font=("STHeiti", 10), width=15, anchor=tk.W, cursor="hand2")
+                page_label.pack(side=tk.LEFT, padx=5, pady=5)
+                page_label.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
+                # 问题内容
+                content_label = tk.Label(problem_frame, text=f"{problem.get('body', '无问题内容')}", 
+                                       font=("STHeiti", 10), wraplength=600, justify=tk.LEFT, cursor="hand2")
+                content_label.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5, pady=5)
+                content_label.bind("<Button-1>", lambda e, p=problem: self.on_problem_click(p))
     
     def load_ai_key(self):
         # 从配置中加载AI key
@@ -152,8 +167,12 @@ class ProblemListWindow:
             solved_count = 0
             total_count = len(self.problems_ls)
             
-            # 依次处理每个问题
+            # 依次处理每个问题，跳过已有result的问题
             for idx, problem in enumerate(self.problems_ls):
+                # 检查问题是否已有result键且非空，如果有则跳过
+                if 'result' in problem and problem['result']:
+                    continue
+                    
                 try:
                     # 更新按钮文本显示进度
                     progress_text = f"AI 解答中... ({idx+1}/{total_count})"
