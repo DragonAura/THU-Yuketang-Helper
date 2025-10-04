@@ -18,4 +18,10 @@ pip install -r requirements.txt
 
 然后直接 `python main.py` 即可启动程序。
 
-若需要使用 ai 答题功能，需要先获取 api key，具体参考 [阿里官方文档](https://help.aliyun.com/zh/model-studio/get-api-key?spm=a2c4g.11186623.0.0.67c34823GEeyCl)，然后将其输入到 config 里即可。
+首先点击设置按钮，按照图形界面进行答题逻辑的设置与 AI api key，具体参考 [阿里官方文档](https://help.aliyun.com/zh/model-studio/get-api-key?spm=a2c4g.11186623.0.0.67c34823GEeyCl)。
+
+然后点击登录，扫描出现的二维码进行登录。
+
+接下来点击启动监听，若有课程即可自动签到。
+
+点击课程名，可显示本课程的所有题目，可以点击“AI 解答所有题目”来自动解答所有题目；还可以点进每道题目，来手动修正答案，或者直接手动作答，或者让AI重新作答。已经作答过且提交到与课堂的题目会被锁住不能修改，同时AI自动解答所有题目时也会自动跳过。
