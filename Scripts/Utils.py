@@ -93,8 +93,8 @@ def get_config_dir():
         # macOS和Linux系统使用HOME环境变量
         home = os.environ["HOME"]
         appdata_route = f"{home}/Library"
-        dir_route = appdata_route + "/RainClassroomAssistant"
-        return dir_route
+        appdata_route = appdata_route + "/RainClassroomAssistant"
+        # return dir_route
     
     # 确保目录存在
     if not os.path.exists(appdata_route):
