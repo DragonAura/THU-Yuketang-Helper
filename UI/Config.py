@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import json
 import functools
+import os
 from Scripts.Utils import get_config_path, resource_path
 
 class ConfigDialog:
@@ -11,7 +12,7 @@ class ConfigDialog:
         self.top = tk.Toplevel(parent)
         self.top.title("雨课堂助手设置")
         self.top.geometry("430x550")
-        self.top.configure(bg="white")
+        # 不设置固定背景色，让系统自动处理
         self.top.resizable(False, False)
         
         # 窗口居中
@@ -60,7 +61,7 @@ class ConfigDialog:
         self.scrollbar.config(command=self.canvas.yview)
         
         # 创建内容框架
-        self.content_frame = tk.Frame(self.canvas, bg="white")
+        self.content_frame = tk.Frame(self.canvas)
         self.canvas_window = self.canvas.create_window((0, 0), window=self.content_frame, anchor=tk.NW)
         
         # 绑定事件以更新滚动区域
@@ -83,22 +84,22 @@ class ConfigDialog:
     
     def create_danmu_config(self):
         # 弹幕设置区域
-        danmu_frame = tk.LabelFrame(self.content_frame, text="弹幕设置", font=("STHeiti", 10), bg="white")
+        danmu_frame = tk.LabelFrame(self.content_frame, text="弹幕设置", font=("STHeiti", 10))
         danmu_frame.pack(fill=tk.X, padx=20, pady=10, ipady=10)
         
         # 启用弹幕复选框
         self.danmu_on_var = tk.BooleanVar()
         self.danmu_on = tk.Checkbutton(danmu_frame, text="启用自动发送弹幕", variable=self.danmu_on_var, 
-                                      font=("STHeiti", 9), bg="white", command=self.toggle_danmu_settings)
+                                      font=("STHeiti", 9), command=self.toggle_danmu_settings)
         self.danmu_on.pack(anchor=tk.W, pady=5)
         
         # 弹幕设置详细选项
-        self.danmu_settings_frame = tk.Frame(danmu_frame, bg="white")
+        self.danmu_settings_frame = tk.Frame(danmu_frame)
         self.danmu_settings_frame.pack(fill=tk.X, padx=20)
         
         # 弹幕数量标签
         danmu_label = tk.Label(self.danmu_settings_frame, text="每门课程最多自动发送弹幕数量:", 
-                              font=("STHeiti", 9), bg="white")
+                              font=("STHeiti", 9))
         danmu_label.pack(anchor=tk.W, pady=5)
         
         # 弹幕数量选择器
@@ -111,37 +112,37 @@ class ConfigDialog:
     
     def create_auto_answer_config(self):
         # 自动答题设置区域
-        answer_frame = tk.LabelFrame(self.content_frame, text="自动答题设置", font=("STHeiti", 10), bg="white")
+        answer_frame = tk.LabelFrame(self.content_frame, text="自动答题设置", font=("STHeiti", 10))
         answer_frame.pack(fill=tk.X, padx=20, pady=10, ipady=10)
         
         # 启用自动答题复选框
         self.auto_answer_var = tk.BooleanVar()
         self.auto_answer = tk.Checkbutton(answer_frame, text="启用自动答题", variable=self.auto_answer_var, 
-                                         font=("STHeiti", 9), bg="white", command=self.toggle_answer_settings)
+                                         font=("STHeiti", 9), command=self.toggle_answer_settings)
         self.auto_answer.pack(anchor=tk.W, pady=5)
         
         # 自动答题设置详细选项
-        self.answer_settings_frame = tk.Frame(answer_frame, bg="white")
+        self.answer_settings_frame = tk.Frame(answer_frame)
         self.answer_settings_frame.pack(fill=tk.X, padx=20)
         
         # 延迟类型选择
-        delay_type_frame = tk.Frame(self.answer_settings_frame, bg="white")
+        delay_type_frame = tk.Frame(self.answer_settings_frame)
         delay_type_frame.pack(fill=tk.X, pady=5)
         
         self.delay_type_var = tk.IntVar(value=1)
         
         tk.Radiobutton(delay_type_frame, text="随机延迟", variable=self.delay_type_var, value=1, 
-                      font=("STHeiti", 9), bg="white", command=self.toggle_delay_custom).pack(anchor=tk.W)
+                      font=("STHeiti", 9), command=self.toggle_delay_custom).pack(anchor=tk.W)
         
         tk.Radiobutton(delay_type_frame, text="固定延迟", variable=self.delay_type_var, value=2, 
-                      font=("STHeiti", 9), bg="white", command=self.toggle_delay_custom).pack(anchor=tk.W, pady=(5, 0))
+                      font=("STHeiti", 9), command=self.toggle_delay_custom).pack(anchor=tk.W, pady=(5, 0))
         
         # 自定义延迟设置
-        self.delay_custom_frame = tk.Frame(self.answer_settings_frame, bg="white")
+        self.delay_custom_frame = tk.Frame(self.answer_settings_frame)
         self.delay_custom_frame.pack(fill=tk.X, pady=5)
         
         tk.Label(self.delay_custom_frame, text="自定义延迟时间(秒):", 
-                font=("STHeiti", 9), bg="white").pack(anchor=tk.W)
+                font=("STHeiti", 9)).pack(anchor=tk.W)
         
         self.custom_time_var = tk.IntVar(value=0)
         self.custom_time_spinbox = tk.Spinbox(self.delay_custom_frame, from_=0, to=60, width=10, 
@@ -150,12 +151,12 @@ class ConfigDialog:
     
     def create_ai_config(self):
         # AI设置区域
-        ai_frame = tk.LabelFrame(self.content_frame, text="AI设置", font=("STHeiti", 10), bg="white")
+        ai_frame = tk.LabelFrame(self.content_frame, text="AI设置", font=("STHeiti", 10))
         ai_frame.pack(fill=tk.X, padx=20, pady=10, ipady=10)
         
         # AI Key标签
         ai_key_label = tk.Label(ai_frame, text="AI API Key:", 
-                              font=("STHeiti", 9), bg="white")
+                              font=("STHeiti", 9))
         ai_key_label.pack(anchor=tk.W, pady=5)
         
         # AI Key输入框
@@ -167,7 +168,7 @@ class ConfigDialog:
         # 显示/隐藏密码按钮
         self.show_key_var = tk.BooleanVar()
         self.show_key_check = tk.Checkbutton(ai_frame, text="显示Key", variable=self.show_key_var, 
-                                           font=("STHeiti", 9), bg="white", command=self.toggle_key_visibility)
+                                           font=("STHeiti", 9), command=self.toggle_key_visibility)
         self.show_key_check.pack(anchor=tk.W, pady=5)
         
     def toggle_key_visibility(self):
@@ -179,12 +180,12 @@ class ConfigDialog:
             
     def create_button_area(self):
         # 按钮区域
-        button_frame = tk.Frame(self.content_frame, bg="white")
+        button_frame = tk.Frame(self.content_frame)
         button_frame.pack(fill=tk.X, padx=20, pady=20)
         
         # 保存按钮
         save_button = tk.Button(button_frame, text="保存设置", command=self.save_config, width=15, 
-                              font=("STHeiti", 9), bg="#f0f0f0")
+                              font=("STHeiti", 9))
         save_button.pack(anchor=tk.CENTER)
     
     def load_config(self):

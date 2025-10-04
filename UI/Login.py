@@ -19,7 +19,7 @@ class LoginDialog:
         self.top = tk.Toplevel(parent)
         self.top.title("雨课堂登录")
         self.top.geometry("350x500")
-        self.top.configure(bg="white")
+        # self.top.configure(bg="white")
         self.top.resizable(False, False)
         
         # 窗口居中
@@ -61,29 +61,29 @@ class LoginDialog:
     
     def create_ui(self):
         # 创建主框架
-        main_frame = tk.Frame(self.top, bg="white")
+        main_frame = tk.Frame(self.top)
         main_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
         
         # 标题标签
-        title_label = tk.Label(main_frame, text="微信扫码登录雨课堂", font=("STHeiti", 16), bg="white")
+        title_label = tk.Label(main_frame, text="微信扫码登录雨课堂", font=("STHeiti", 16))
         title_label.pack(pady=(20, 10))
         
         # 提示标签
         hint_label = tk.Label(main_frame, text="注：扫码登录仅用于获取您的登录状态以便软件监听雨课堂信息。", 
-                             font=("STHeiti", 8), fg="red", bg="white", wraplength=300, justify=tk.CENTER)
+                             font=("STHeiti", 8), fg="red", wraplength=300, justify=tk.CENTER)
         hint_label.pack(pady=(0, 20))
         
         # 二维码显示区域 - 移除白边
-        self.qrcode_frame = tk.Frame(main_frame, bg="white", width=256, height=256)
+        self.qrcode_frame = tk.Frame(main_frame, width=256, height=256)
         self.qrcode_frame.pack(pady=20)
         self.qrcode_frame.pack_propagate(False)  # 防止框架大小被内容改变
         
         # 二维码标签
-        self.qrcode_label = tk.Label(self.qrcode_frame, bg="white")
+        self.qrcode_label = tk.Label(self.qrcode_frame)
         self.qrcode_label.pack(fill=tk.BOTH, expand=True, padx=0, pady=0)  # 确保没有内边距
         
         # 登录状态标签
-        self.status_label = tk.Label(main_frame, text="", font=("STHeiti", 10), fg="red", bg="white")
+        self.status_label = tk.Label(main_frame, text="", font=("STHeiti", 10), fg="red")
         self.status_label.pack(pady=10)
     
     def start_wssapp(self):
@@ -105,7 +105,7 @@ class LoginDialog:
                 pil_img = pil_img.resize((256, 256), Image.LANCZOS)
                 tk_img = ImageTk.PhotoImage(pil_img)
                 # 更新二维码显示
-                self.qrcode_label.config(image=tk_img, bg="white")
+                self.qrcode_label.config(image=tk_img)
                 self.qrcode_label.image = tk_img  # 保持引用，防止被垃圾回收
             # 扫码且登录成功
             elif data["op"] == "loginsuccess":

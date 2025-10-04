@@ -22,7 +22,7 @@ class MainWindow:
     def __init__(self, master):
         self.master = master
         self.master.geometry("800x700")
-        self.master.configure(bg="white")
+        # self.master.configure(bg="white")
         
         # 加载配置
         self.load_config()
@@ -83,25 +83,25 @@ class MainWindow:
         button_frame = tk.Frame(menu_frame, bg="#111111")
         button_frame.pack(side=tk.RIGHT, padx=10, pady=10)
         
-        self.active_btn = tk.Button(button_frame, text="启动监听", bg="white", width=12)
+        self.active_btn = tk.Button(button_frame, text="启动监听", width=12)
         self.active_btn.pack(side=tk.LEFT, padx=5)
         
         # 添加测试模式按钮
-        self.test_mode_btn = tk.Button(button_frame, text="测试模式", bg="white", width=12)
+        self.test_mode_btn = tk.Button(button_frame, text="测试模式", width=12)
         self.test_mode_btn.pack(side=tk.LEFT, padx=5)
         
-        self.login_btn = tk.Button(button_frame, text="登录", bg="white", width=12)
+        self.login_btn = tk.Button(button_frame, text="登录", width=12)
         self.login_btn.pack(side=tk.LEFT, padx=5)
         
-        self.config_btn = tk.Button(button_frame, text="设置", bg="white", width=12)
+        self.config_btn = tk.Button(button_frame, text="设置", width=12)
         self.config_btn.pack(side=tk.LEFT, padx=5)
     
     def create_table(self):
-        table_frame = tk.Frame(self.master, bg="white")
+        table_frame = tk.Frame(self.master)
         table_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
         
         # 表格标题
-        title_label = tk.Label(table_frame, text="课程列表", font=("STHeiti", 12), bg="white")
+        title_label = tk.Label(table_frame, text="课程列表", font=("STHeiti", 12))
         title_label.pack(anchor=tk.W, pady=5)
         
         # 创建表格
@@ -127,11 +127,11 @@ class MainWindow:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
     
     def create_message_area(self):
-        message_frame = tk.Frame(self.master, bg="white")
+        message_frame = tk.Frame(self.master)
         message_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=10)
         
         # 消息区域标题
-        title_label = tk.Label(message_frame, text="系统消息", font=("STHeiti", 12), bg="white")
+        title_label = tk.Label(message_frame, text="系统消息", font=("STHeiti", 12))
         title_label.pack(anchor=tk.W, pady=5)
         
         # 创建消息文本框
@@ -177,7 +177,7 @@ class MainWindow:
         else:
             # 退出测试模式
             self.test_mode = False
-            self.test_mode_btn.config(text="测试模式", bg="white")
+            self.test_mode_btn.config(text="测试模式")
             self.active_btn.config(state=tk.NORMAL)
             self.login_btn.config(state=tk.NORMAL)
             
