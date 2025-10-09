@@ -125,7 +125,14 @@ class Lesson:
             if current_presentation not in presentations:
                 presentations.append(current_presentation)
             for presentationid in presentations:
-                self.problems_ls.extend(self.get_problems(presentationid))
+                problems = self.get_problems(presentationid)
+                for problem in problems:
+                    for problem_exist in self.problems_ls:
+                        if problem_exist["problemId"] == problem["problemId"]:
+                            break
+                    else:
+                        self.problems_ls.append(problem)
+                # self.problems_ls.extend(problems)
             self.unlocked_problem = data["unlockedproblem"]
             for problemid in self.unlocked_problem:
                 self._current_problem(wsapp, problemid)
@@ -136,9 +143,22 @@ class Lesson:
             self.add_message(meg,0)
             wsapp.close()
         elif op == "presentationupdated":
-            self.problems_ls.extend(self.get_problems(data["presentation"]))
+            # self.problems_ls.extend(self.get_problems(data["presentation"]))
+            problems = self.get_problems(data["presentation"])
+            for problem in problems:
+                for problem_exist in self.problems_ls:
+                    if problem_exist["problemId"] == problem["problemId"]:
+                        break
+                else:
+                    self.problems_ls.append(problem)
         elif op == "presentationcreated":
-            self.problems_ls.extend(self.get_problems(data["presentation"]))
+            problems = self.get_problems(data["presentation"])
+            for problem in problems:
+                for problem_exist in self.problems_ls:
+                    if problem_exist["problemId"] == problem["problemId"]:
+                        break
+                else:
+                    self.problems_ls.append(problem)
         elif op == "newdanmu" and self.config["auto_danmu"]:
             current_content = data["danmu"].lower()
             uid = data["userid"]
