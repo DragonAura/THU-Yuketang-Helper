@@ -218,7 +218,7 @@ class ProblemListWindow:
                     'role':'user',
                     'content': [
                         {'image': f"file://{os.path.abspath(image_path)}"},
-                        {'text': '请以JSON格式回答图片中的问题。如果是选择题，则返回{{"question": "问题", "answer": ["选项（A/B/C/...）"]}}，选项为圆形则为单选，选项为矩形则为多选；如果是填空题，则返回{{"question": "问题", "answer": ["填空1答案", "填空2答案", ...]}}'}
+                        {'text': '请以JSON格式回答图片中的问题。如果是选择题，则返回{{"question": "问题", "answer": ["选项（A/B/C/...）"]}}，选项为圆形则为单选，选项为矩形则为多选；如果是填空题，则返回{{"question": "问题", "answer": ["填空1答案", "填空2答案", ...]}}；如果是主观题，则返回{{"question": "问题", "answer": ["主观题答案"]}}'}
                     ]
                 }
             ]

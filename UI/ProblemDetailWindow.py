@@ -145,7 +145,7 @@ class ProblemDetailWindow:
             self.create_radio_answer_area(section_frame)
         elif self.problem.get('problemType') == 2 or self.problem.get('problemType') == 3:  # 多选题
             self.create_check_answer_area(section_frame)
-        elif self.problem.get('blanks'):  # 填空题
+        elif self.problem.get('blanks') or self.problem.get('problemType') == 5:  # 填空题
             self.create_fill_answer_area(section_frame)
         
         # 第五行：取消/确认按钮
@@ -176,7 +176,7 @@ class ProblemDetailWindow:
             answer = [self.answer_var.get()]
         elif self.problem.get('problemType') == 2 or self.problem.get('problemType') == 3:  # 多选题
             answer = [key for key, var in self.answer_vars if var.get()]
-        elif self.problem.get('blanks'):  # 填空题
+        elif self.problem.get('blanks') or self.problem.get('problemType') == 5:  # 填空题
             answer = [entry.get() for entry in self.answer_entries]
         
         # 将答案写回到原始的problem对象
@@ -287,7 +287,7 @@ class ProblemDetailWindow:
     
     def create_fill_answer_area(self, parent):
         # 创建填空题答题区域
-        blanks_count = len(self.problem.get('blanks', []))
+        blanks_count = len(self.problem.get('blanks', [""]))
         default_answers = self.problem.get('answers', [])
         
         self.answer_entries = []
@@ -341,7 +341,7 @@ class ProblemDetailWindow:
                         'role':'user',
                         'content': [
                             {'image': f"file://{os.path.abspath(image_path)}"},
-                            {'text': '请以JSON格式回答图片中的问题。如果是选择题，则返回{{"question": "问题", "answer": ["选项（A/B/C/...）"]}}，选项为圆形则为单选，选项为矩形则为多选；如果是填空题，则返回{{"question": "问题", "answer": ["填空1答案", "填空2答案", ...]}}'}
+                            {'text': '请以JSON格式回答图片中的问题。如果是选择题，则返回{{"question": "问题", "answer": ["选项（A/B/C/...）"]}}，选项为圆形则为单选，选项为矩形则为多选；如果是填空题，则返回{{"question": "问题", "answer": ["填空1答案", "填空2答案", ...]}}；如果是主观题，则返回{{"question": "问题", "answer": ["主观题答案"]}}'}
                         ]
                     }
                 ]
